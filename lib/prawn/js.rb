@@ -18,7 +18,7 @@ module Prawn
     # will override earlier fragments.
     #
     def add_did_save_js(script)
-      aa[:DS] = ref!(:S => :JavaScript, :JS => script)
+      renderer.aa[:DS] = renderer.ref!(:S => :JavaScript, :JS => script)
     end
 
     # add a Javascript fragment that will execute after the document is printed.
@@ -27,7 +27,7 @@ module Prawn
     # will override earlier fragments.
     #
     def add_did_print_js(script)
-      aa[:DP] = ref!(:S => :JavaScript, :JS => script)
+      renderer.aa[:DP] = renderer.ref!(:S => :JavaScript, :JS => script)
     end
 
     # add a Javascript fragment that will execute when the document is opened.
@@ -36,7 +36,7 @@ module Prawn
     # multiple times will append the new fragment to the list.
     #
     def add_docopen_js(name, script)
-      obj = ref!(:S => :JavaScript, :JS => script)
+      obj = renderer.ref!(:S => :JavaScript, :JS => script)
       javascript.data.add(name, obj)
     end
 
@@ -46,7 +46,7 @@ module Prawn
     # will override earlier fragments.
     #
     def add_will_close_js(script)
-      aa[:WC] = ref!(:S => :JavaScript, :JS => script)
+      aa[:WC] = renderer.ref!(:S => :JavaScript, :JS => script)
     end
 
     # add a Javascript fragment that will execute before the document is printed.
@@ -74,19 +74,19 @@ module Prawn
     #
     def aa
       # this entry is only valid in the document catalogue in PDF versions 1.4+.
-      min_version(1.4)
-      @root.data[:AA] ||= {}
+      renderer.min_version(1.4)
+      renderer.state.store.root.data[:AA] ||= {}
     end
 
     # create or access the Javascript Name Tree in the document names dict.
     # See section 3.6.3 and table 3.28 in the PDF spec.
     #
     def javascript
-      names.data[:JavaScript] ||= ref!(PDF::Core::NameTree::Node.new(self, NAME_TREE_CHILDREN_LIMIT))
+      renderer.names.data[:JavaScript] ||= ref!(PDF::Core::NameTree::Node.new(self, NAME_TREE_CHILDREN_LIMIT))
     end
 
   end
 end
 
 require 'pdf/core'
-PDF::Core::Renderer.send(:include, Prawn::JS)
+Prawn::Document.send(:include, Prawn::JS)
