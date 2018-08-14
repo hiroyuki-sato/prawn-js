@@ -89,4 +89,5 @@ module Prawn
 end
 
 require 'pdf/core'
+require 'prawn'
 Prawn::Document.send(:include, Prawn::JS)
